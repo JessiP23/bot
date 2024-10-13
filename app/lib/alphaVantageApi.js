@@ -6,7 +6,6 @@ export async function fetchStockData(symbol) {
     const response = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=demo`);
     const data = await response.json();
 
-    console.log('API response:', data);
 
     if (data['Error Message']) {
       throw new Error(data['Error Message']);
