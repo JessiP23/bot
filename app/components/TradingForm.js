@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react';
+import { executeTrade } from '../lib/tradingBot';
 
-export default function TradingForm() {
-  const [symbol, setSymbol] = useState('');
+export default function TradingForm({ api, symbol }) {
   const [amount, setAmount] = useState('');
   const [result, setResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -12,12 +12,7 @@ export default function TradingForm() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const res = await fetch('/api/trade', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ symbol, amount: parseFloat(amount) }),
-      });
-      const data = await res.json();
+      const data = await executeTrade(api, symbol, parseFloat(amount));
       setResult(data);
     } catch (error) {
       console.error('Error:', error);
@@ -27,20 +22,9 @@ export default function TradingForm() {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md text-gray-800">
+    <div className="bg-white p-6 rounded-lg shadow-md">
       <h2 className="text-2xl font-semibold mb-4">Execute Trade</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="symbol" className="block text-sm font-medium text-gray-700">Symbol</label>
-          <input
-            type="text"
-            id="symbol"
-            value={symbol}
-            onChange={(e) => setSymbol(e.target.value)}
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-            required
-          />
-        </div>
         <div>
           <label htmlFor="amount" className="block text-sm font-medium text-gray-700">Amount ($)</label>
           <input
@@ -68,9 +52,8 @@ export default function TradingForm() {
           ) : (
             <ul className="space-y-2">
               <li><strong>Symbol:</strong> {result.symbol}</li>
-              <li><strong>Shares:</strong> {result.shares}</li>
+              <li><strong>Amount:</strong> ${result.amount}</li>
               <li><strong>Price:</strong> ${result.price}</li>
-              <li><strong>Profit/Loss:</strong> ${result.profit}</li>
               <li><strong>Timestamp:</strong> {new Date(result.timestamp).toLocaleString()}</li>
             </ul>
           )}

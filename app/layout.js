@@ -1,8 +1,8 @@
 import './globals.css'
 
 export const metadata = {
-  title: 'AlgoTrader AI',
-  description: 'AI-powered algorithmic trading platform',
+  title: 'Advanced Crypto Trader AI',
+  description: 'AI-powered cryptocurrency trading platform',
 }
 
 export default function RootLayout({ children }) {
